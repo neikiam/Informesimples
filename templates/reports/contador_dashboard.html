@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel Contador - Informes Simples{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">
+        <i class="bi bi-calculator text-success"></i> Panel del Contador
+    </h2>
+    
+    <!-- Empleados -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-people"></i> Empleados Activos
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if empleados %}
+            <div class="row">
+                {% for empleado in empleados %}
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title">{{ empleado.get_full_name }}</h6>
+                            <p class="card-text text-muted mb-2">@{{ empleado.username }}</p>
+                            <a href="{% url 'empleado_performance' empleado.id %}" class="btn btn-sm btn-primary w-100">
+                                <i class="bi bi-bar-chart"></i> Ver Rendimiento
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted mb-0">No hay empleados activos en el sistema.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Todos los Informes -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-file-earmark-text"></i> Todos los Informes Recientes
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if informes %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Empleado</th>
+                            <th>Fecha</th>
+                            <th>Lugar</th>
+                            <th>Inicio</th>
+                            <th>Fin</th>
+                            <th>Horas</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for informe in informes|slice:":20" %}
+                        <tr>
+                            <td>
+                                <strong>{{ informe.empleado.get_full_name }}</strong>
+                                <br><small class="text-muted">@{{ informe.empleado.username }}</small>
+                            </td>
+                            <td>{{ informe.fecha_inicio|date:"d/m/Y" }}</td>
+                            <td>{{ informe.lugar_evento|truncatewords:4 }}</td>
+                            <td>{{ informe.hora_inicio }}:00</td>
+                            <td>{{ informe.hora_fin }}:00</td>
+                            <td>
+                                <span class="badge bg-info">{{ informe.horas_trabajadas }}h</span>
+                            </td>
+                            <td>
+                                <a href="{% url 'report_detail' informe.id %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye"></i> Ver
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted mb-0">No hay informes registrados.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

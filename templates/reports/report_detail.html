@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle del Informe - Informes Simples{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>
+                    <i class="bi bi-file-earmark-text text-primary"></i> Detalle del Informe
+                </h2>
+                {% if user.role == 'CONTADOR' %}
+                    <a href="{% url 'contador_dashboard' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Volver
+                    </a>
+                {% elif user.role == 'EMPLEADO' %}
+                    <a href="{% url 'empleado_dashboard' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Volver
+                    </a>
+                {% endif %}
+            </div>
+            
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Informe #{{ report.id }}</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Información del Empleado -->
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-3">
+                            <i class="bi bi-person"></i> Empleado
+                        </h6>
+                        <div class="p-3 bg-light rounded">
+                            <p class="mb-1"><strong>Nombre:</strong> {{ report.empleado.get_full_name }}</p>
+                            <p class="mb-1"><strong>Usuario:</strong> @{{ report.empleado.username }}</p>
+                            <p class="mb-0"><strong>Email:</strong> {{ report.empleado.email }}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Lugar del Evento -->
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-3">
+                            <i class="bi bi-geo-alt"></i> Lugar y Dirección
+                        </h6>
+                        <div class="p-3 bg-light rounded">
+                            <p class="mb-0">{{ report.lugar_evento }}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Horarios -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="text-muted mb-3">
+                                <i class="bi bi-play-circle text-success"></i> Inicio de Jornada
+                            </h6>
+                            <div class="p-3 bg-light rounded">
+                                <p class="mb-1"><strong>Fecha:</strong> {{ report.fecha_inicio|date:"d/m/Y" }}</p>
+                                <p class="mb-0"><strong>Hora:</strong> {{ report.hora_inicio }}:00</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h6 class="text-muted mb-3">
+                                <i class="bi bi-stop-circle text-danger"></i> Fin de Jornada
+                            </h6>
+                            <div class="p-3 bg-light rounded">
+                                <p class="mb-1"><strong>Fecha:</strong> {{ report.fecha_fin|date:"d/m/Y" }}</p>
+                                <p class="mb-0"><strong>Hora:</strong> {{ report.hora_fin }}:00</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Horas Trabajadas -->
+                    <div class="mb-4">
+                        <h6 class="text-muted mb-3">
+                            <i class="bi bi-clock"></i> Horas Trabajadas
+                        </h6>
+                        <div class="p-4 bg-primary text-white rounded text-center">
+                            <h2 class="mb-0">{{ report.horas_trabajadas }} horas</h2>
+                        </div>
+                    </div>
+                    
+                    <!-- Fecha de Creación -->
+                    <div class="text-muted small">
+                        <i class="bi bi-calendar-plus"></i> Informe creado el {{ report.created_at|date:"d/m/Y H:i" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

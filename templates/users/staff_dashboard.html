@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Panel Staff - Informes Simples{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">
+        <i class="bi bi-shield-check text-primary"></i> Panel de Administración Staff
+    </h2>
+    
+    <!-- Usuarios Pendientes de Aprobación -->
+    <div class="card mb-4">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0">
+                <i class="bi bi-person-check"></i> Usuarios Pendientes de Aprobación
+                <span class="badge bg-dark">{{ pending_users.count }}</span>
+            </h5>
+        </div>
+        <div class="card-body">
+            {% if pending_users %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Nombre Completo</th>
+                            <th>Email</th>
+                            <th>Fecha Registro</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in pending_users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.get_full_name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.date_joined|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                <a href="{% url 'approve_user' user.id %}" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-pencil"></i> Revisar
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted mb-0">No hay usuarios pendientes de aprobación.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Todos los Usuarios -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-people"></i> Todos los Usuarios
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Nombre Completo</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Fecha Registro</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in all_users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.get_full_name }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if user.role == 'STAFF' %}bg-danger
+                                    {% elif user.role == 'CONTADOR' %}bg-success
+                                    {% else %}bg-info{% endif %}">
+                                    {{ user.get_role_display }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if user.is_approved %}
+                                    <span class="badge bg-success">Aprobado</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Pendiente</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.date_joined|date:"d/m/Y" }}</td>
+                            <td>
+                                <a href="{% url 'approve_user' user.id %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
