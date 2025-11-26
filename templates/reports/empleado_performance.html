@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Rendimiento de {{ empleado.get_full_name }} - Informes Simples{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="bi bi-graph-up text-primary"></i> Rendimiento Diario
+        </h2>
+        <a href="{% url 'contador_dashboard' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Volver
+        </a>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">{{ empleado.get_full_name }}</h5>
+            <p class="card-text">
+                <span class="text-muted">Usuario:</span> @{{ empleado.username }}<br>
+                <span class="text-muted">Email:</span> {{ empleado.email }}
+            </p>
+        </div>
+    </div>
+    
+    {% if resumen_diario %}
+    <div class="row">
+        {% for dia in resumen_diario %}
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header {% if dia.horas_extra > 0 %}bg-warning{% else %}bg-light{% endif %}">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-calendar-event"></i> {{ dia.fecha|date:"l, d de F de Y" }}
+                        </h5>
+                        <div>
+                            <span class="badge bg-primary">Total: {{ dia.total_horas }}h</span>
+                            {% if dia.horas_extra > 0 %}
+                                <span class="badge bg-danger">Extras: {{ dia.horas_extra }}h</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <div class="p-3 bg-light rounded text-center">
+                                <h6 class="text-muted mb-1">Horas Regulares</h6>
+                                <h4 class="mb-0 text-success">{{ dia.horas_regulares }}h</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 bg-light rounded text-center">
+                                <h6 class="text-muted mb-1">Horas Extra</h6>
+                                <h4 class="mb-0 text-danger">{{ dia.horas_extra }}h</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 bg-light rounded text-center">
+                                <h6 class="text-muted mb-1">Total Horas</h6>
+                                <h4 class="mb-0 text-primary">{{ dia.total_horas }}h</h4>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h6 class="mt-4 mb-3">
+                        <i class="bi bi-list-ul"></i> Detalles de Informes ({{ dia.informes.count }})
+                    </h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Lugar</th>
+                                    <th>Hora Inicio</th>
+                                    <th>Hora Fin</th>
+                                    <th>Horas</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for informe in dia.informes %}
+                                <tr>
+                                    <td>{{ informe.lugar_evento|truncatewords:8 }}</td>
+                                    <td>{{ informe.hora_inicio }}:00</td>
+                                    <td>{{ informe.hora_fin }}:00</td>
+                                    <td>
+                                        <span class="badge bg-info">{{ informe.horas_trabajadas }}h</span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'report_detail' informe.id %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i> Ver
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> Este empleado aún no ha registrado informes de jornada.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

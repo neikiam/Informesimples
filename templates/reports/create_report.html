@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear Informe - Informes Simples{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-file-earmark-plus"></i> Crear Nuevo Informe de Jornada
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            {{ form.lugar_evento.label_tag }}
+                            {{ form.lugar_evento }}
+                            <small class="form-text text-muted">
+                                Describe el lugar y dirección donde realizaste tu jornada laboral.
+                            </small>
+                            {% if form.lugar_evento.errors %}
+                                <div class="text-danger small mt-1">{{ form.lugar_evento.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-success">
+                                            <i class="bi bi-play-circle"></i> Inicio de Jornada
+                                        </h6>
+                                        
+                                        <div class="mb-3">
+                                            {{ form.fecha_inicio.label_tag }}
+                                            {{ form.fecha_inicio }}
+                                            {% if form.fecha_inicio.errors %}
+                                                <div class="text-danger small mt-1">{{ form.fecha_inicio.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="mb-0">
+                                            {{ form.hora_inicio.label_tag }}
+                                            {{ form.hora_inicio }}
+                                            {% if form.hora_inicio.errors %}
+                                                <div class="text-danger small mt-1">{{ form.hora_inicio.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-danger">
+                                            <i class="bi bi-stop-circle"></i> Finalización de Jornada
+                                        </h6>
+                                        
+                                        <div class="mb-3">
+                                            {{ form.fecha_fin.label_tag }}
+                                            {{ form.fecha_fin }}
+                                            {% if form.fecha_fin.errors %}
+                                                <div class="text-danger small mt-1">{{ form.fecha_fin.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="mb-0">
+                                            {{ form.hora_fin.label_tag }}
+                                            {{ form.hora_fin }}
+                                            {% if form.hora_fin.errors %}
+                                                <div class="text-danger small mt-1">{{ form.hora_fin.errors }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="d-flex gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Guardar Informe
+                            </button>
+                            <a href="{% url 'empleado_dashboard' %}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="alert alert-info mt-3">
+                <i class="bi bi-lightbulb"></i> <strong>Consejo:</strong> Las horas se calculan automáticamente. 
+                Si trabajaste en múltiples lugares el mismo día, crea un informe separado para cada jornada.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
